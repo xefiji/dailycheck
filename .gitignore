@@ -1,2 +1,6 @@
 elm-stuff
 *.code-workspace
+web/build/*
+!web/build/.gitkeep
+deployment/dist/*
+!deployment/dist/.gitkeep

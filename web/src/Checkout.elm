@@ -81,7 +81,7 @@ fetchData =
 
 url : String
 url =
-    "http://localhost:5016/daily-check.json"
+    "http://localhost:8080/day"
 
 
 type Msg
@@ -171,20 +171,12 @@ update msg model =
             ( { model | day = { dayToUpdate | day = Date.toIsoString today } }, Cmd.none )
 
         Submit ->
-            let
-                _ =
-                    Debug.log "model " model
-            in
             ( model
             , Cmd.none
             )
                 |> Toasty.addToast toastyConfig ToastyMsg "successfully saved day"
 
         ReceiveDatas (Ok day) ->
-            let
-                _ =
-                    Debug.log "day " day
-            in
             ( { model
                 | day = day
               }

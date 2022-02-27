@@ -1,6 +1,7 @@
 <head>
     <link rel="stylesheet" 
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>{{ .title }}</title>
 </head>
 
   <style>
@@ -27,7 +28,7 @@
       color:#ccc;
     }
     .stars:not(:checked) > label:before {
-      content: '★ ';
+      content: '\2605 ';
     }
     .stars > input:checked ~ label {
       color: #ffc700;    
@@ -48,7 +49,7 @@
   <body>
     <div id="elm-app"></div>
     
-    <script src="elm.js"></script>
+    <script src="web/build/dailycheck.js"></script>
     <script>
       var app = Elm.Checkout.init({
         node: document.getElementById("elm-app")
