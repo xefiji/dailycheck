@@ -22,19 +22,15 @@ func Listen(opts ...Option) error {
 		}
 	}
 
-	// db, err := newDB(cfg.DB)
-	// if err != nil {
-	// 	log.Error().Err(err).Msg("could not connect to database")
-	// 	return err
-	// }
-
-	// repo := newRepository(db)
+	service := newService(newRepository())
 
 	router := gin.Default()
 	router.LoadHTMLGlob("web/public/*.html")
 	router.Static("/web/build", "./web/build")
-	router.GET("/day", dayHandler())
+
 	router.GET("/", indexHandler())
+	router.GET("/day", getDayHandler(service))
+	router.POST("/day", postDayHandler(service))
 
 	return serve(router)
 }

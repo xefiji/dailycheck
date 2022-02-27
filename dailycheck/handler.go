@@ -5,19 +5,51 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
-func dayHandler() gin.HandlerFunc {
+type dayDatas struct {
+	Day       string `json:"day"`
+	Sleep     int    `json:"sleep"`
+	Energy    int    `json:"energy"`
+	Intellect int    `json:"intellect"`
+	Anxiety   int    `json:"anxiety"`
+	Family    int    `json:"family"`
+	Social    int    `json:"social"`
+	Work      int    `json:"work"`
+}
+
+func getDayHandler(service *service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"day":       time.Now().Format("2006-01-02"),
-			"sleep":     1,
-			"energy":    2,
-			"intellect": 3,
-			"anxiety":   4,
-			"family":    5,
-			"social":    4,
-			"work":      3,
+		today := time.Now().Format("2006-01-02")
+
+		day, err := service.get(today)
+		if err != nil {
+			log.Error().Err(err).Caller().Str("day", today).Msg("failed to get day datas")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get day datas"})
+			return
+		}
+
+		c.JSON(http.StatusOK, day)
+	}
+}
+
+func postDayHandler(service *service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var request = &dayDatas{}
+		if err := c.ShouldBindJSON(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if err := service.add(*request); err != nil {
+			log.Error().Err(err).Caller().Interface("day", request).Msg("failed to add day datas")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add day datas"})
+			return
+		}
+
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "ok",
 		})
 	}
 }

@@ -4,3 +4,4 @@ web/build/*
 !web/build/.gitkeep
 deployment/dist/*
 !deployment/dist/.gitkeep
+*.db
