@@ -8318,6 +8318,28 @@ var $pablen$toasty$Toasty$view = F4(
 				},
 				toasts));
 	});
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $author$project$Checkout$viewLabel = F2(
+	function (index, name) {
+		return A2(
+			$elm$html$Html$label,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$for(
+					_Utils_ap(
+						name,
+						$elm$core$String$fromInt(index)))
+				]),
+			_List_fromArray(
+				[
+					$elm$html$Html$text(
+					_Utils_ap(
+						name,
+						$elm$core$String$fromInt(index)))
+				]));
+	});
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -8327,11 +8349,8 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 			$elm$json$Json$Encode$bool(bool));
 	});
 var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -8366,184 +8385,80 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 };
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Checkout$viewStar = F4(
+	function (index, name, val, event) {
+		return A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_('radio'),
+					$elm$html$Html$Attributes$name(name),
+					$elm$html$Html$Attributes$value(
+					$elm$core$String$fromInt(index)),
+					$elm$html$Html$Events$onInput(event),
+					$elm$html$Html$Attributes$checked(
+					_Utils_eq(val, index)),
+					$elm$html$Html$Attributes$id(
+					_Utils_ap(
+						name,
+						$elm$core$String$fromInt(index)))
+				]),
+			_List_Nil);
+	});
 var $author$project$Checkout$viewStars = F3(
 	function (name, val, event) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('stars')
+					$elm$html$Html$Attributes$class('row')
 				]),
 			_List_fromArray(
 				[
 					A2(
-					$elm$html$Html$h3,
-					_List_Nil,
+					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(name)
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('radio'),
-							$elm$html$Html$Attributes$name(name),
-							$elm$html$Html$Attributes$value('4'),
-							$elm$html$Html$Events$onInput(event),
-							$elm$html$Html$Attributes$checked(val === 4),
-							$elm$html$Html$Attributes$id(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(4)))
-						]),
-					_List_Nil),
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$for(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(4)))
+							$elm$html$Html$Attributes$class('col-md-6')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(4)))
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('radio'),
-							$elm$html$Html$Attributes$name(name),
-							$elm$html$Html$Attributes$value('3'),
-							$elm$html$Html$Events$onInput(event),
-							$elm$html$Html$Attributes$checked(val === 3),
-							$elm$html$Html$Attributes$id(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(3)))
-						]),
-					_List_Nil),
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$for(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(3)))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(3)))
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('radio'),
-							$elm$html$Html$Attributes$name(name),
-							$elm$html$Html$Attributes$value('2'),
-							$elm$html$Html$Events$onInput(event),
-							$elm$html$Html$Attributes$checked(val === 2),
-							$elm$html$Html$Attributes$id(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(2)))
-						]),
-					_List_Nil),
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$for(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(2)))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(2)))
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('radio'),
-							$elm$html$Html$Attributes$name(name),
-							$elm$html$Html$Attributes$value('1'),
-							$elm$html$Html$Events$onInput(event),
-							$elm$html$Html$Attributes$checked(val === 1),
-							$elm$html$Html$Attributes$id(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(1)))
-						]),
-					_List_Nil),
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$for(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(1)))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(1)))
-						])),
-					A2(
-					$elm$html$Html$input,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$type_('radio'),
-							$elm$html$Html$Attributes$name(name),
-							$elm$html$Html$Attributes$value('0'),
-							$elm$html$Html$Events$onInput(event),
-							$elm$html$Html$Attributes$checked(!val),
-							$elm$html$Html$Attributes$id(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(0)))
-						]),
-					_List_Nil),
-					A2(
-					$elm$html$Html$label,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$for(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(0)))
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(
-							_Utils_ap(
-								name,
-								$elm$core$String$fromInt(0)))
+							A2(
+							$elm$html$Html$h3,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(name)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('stars')
+								]),
+							_List_fromArray(
+								[
+									A4($author$project$Checkout$viewStar, 5, name, val, event),
+									A2($author$project$Checkout$viewLabel, 5, name),
+									A4($author$project$Checkout$viewStar, 4, name, val, event),
+									A2($author$project$Checkout$viewLabel, 4, name),
+									A4($author$project$Checkout$viewStar, 3, name, val, event),
+									A2($author$project$Checkout$viewLabel, 3, name),
+									A4($author$project$Checkout$viewStar, 2, name, val, event),
+									A2($author$project$Checkout$viewLabel, 2, name),
+									A4($author$project$Checkout$viewStar, 1, name, val, event),
+									A2($author$project$Checkout$viewLabel, 1, name)
+								]))
 						]))
 				]));
 	});
 var $author$project$Checkout$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
-		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('container')
+			]),
 		_List_fromArray(
 			[
 				A2(
@@ -8581,21 +8496,31 @@ var $author$project$Checkout$view = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('submit')
+						$elm$html$Html$Attributes$class('submit'),
+						$elm$html$Html$Attributes$class('row')
 					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$button,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Checkout$Submit),
-								$elm$html$Html$Attributes$class('btn'),
-								$elm$html$Html$Attributes$class('btn-success')
+								$elm$html$Html$Attributes$class('col-md-6')
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('All set!')
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Checkout$Submit),
+										$elm$html$Html$Attributes$class('btn'),
+										$elm$html$Html$Attributes$class('btn-success')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('All set!')
+									]))
 							]))
 					]))
 			]));

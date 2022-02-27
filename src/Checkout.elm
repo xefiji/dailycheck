@@ -11,10 +11,9 @@ import Json.Decode as Decode
     exposing
         ( Decoder
         , int
-        , nullable
         , string
         )
-import Json.Decode.Pipeline exposing (optional, required, requiredAt)
+import Json.Decode.Pipeline exposing (required)
 import Task
 import Time exposing (Month(..))
 import Toasty
@@ -213,6 +212,7 @@ toastyConfig =
         |> Toasty.delay 8000
 
 
+getValOrDefault : String -> Int
 getValOrDefault val =
     String.toInt val
         |> Maybe.withDefault 0
@@ -239,7 +239,7 @@ buildErrorMessage httpError =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ Attr.class "container" ]
         [ div [ Attr.class "rate" ]
             [ h1 [] [ text "Daily Check" ]
             , h2 [] [ text model.day.day ]
@@ -252,72 +252,56 @@ view model =
             , viewStars "social" model.day.social UpdateSocial
             , viewStars "work" model.day.work UpdateWork
             ]
-        , div [ Attr.class "submit" ]
-            [ button
-                [ Events.onClick Submit
-                , Attr.class "btn"
-                , Attr.class "btn-success"
+        , div [ Attr.class "submit", Attr.class "row" ]
+            [ div [ Attr.class "col-md-6" ]
+                [ button
+                    [ Events.onClick Submit
+                    , Attr.class "btn"
+                    , Attr.class "btn-success"
+                    ]
+                    [ text "All set!" ]
                 ]
-                [ text "All set!" ]
             ]
         ]
 
 
 viewStars : String -> Int -> (String -> msg) -> Html msg
 viewStars name val event =
-    div [ Attr.class "stars" ]
-        [ h3 [] [ text name ]
-        , input
-            [ Attr.type_ "radio"
-            , Attr.name name
-            , Attr.value "4"
-            , Events.onInput event
-            , Attr.checked (val == 4)
-            , Attr.id (name ++ String.fromInt 4)
+    div [ Attr.class "row" ]
+        [ div [ Attr.class "col-md-6" ]
+            [ h3 [] [ text name ]
+            , div [ Attr.class "stars" ]
+                [ viewStar 5 name val event
+                , viewLabel 5 name
+                , viewStar 4 name val event
+                , viewLabel 4 name
+                , viewStar 3 name val event
+                , viewLabel 3 name
+                , viewStar 2 name val event
+                , viewLabel 2 name
+                , viewStar 1 name val event
+                , viewLabel 1 name
+                ]
             ]
-            []
-        , label [ Attr.for (name ++ String.fromInt 4) ] [ text (name ++ String.fromInt 4) ]
-        , input
-            [ Attr.type_ "radio"
-            , Attr.name name
-            , Attr.value "3"
-            , Events.onInput event
-            , Attr.checked (val == 3)
-            , Attr.id (name ++ String.fromInt 3)
-            ]
-            []
-        , label [ Attr.for (name ++ String.fromInt 3) ] [ text (name ++ String.fromInt 3) ]
-        , input
-            [ Attr.type_ "radio"
-            , Attr.name name
-            , Attr.value "2"
-            , Events.onInput event
-            , Attr.checked (val == 2)
-            , Attr.id (name ++ String.fromInt 2)
-            ]
-            []
-        , label [ Attr.for (name ++ String.fromInt 2) ] [ text (name ++ String.fromInt 2) ]
-        , input
-            [ Attr.type_ "radio"
-            , Attr.name name
-            , Attr.value "1"
-            , Events.onInput event
-            , Attr.checked (val == 1)
-            , Attr.id (name ++ String.fromInt 1)
-            ]
-            []
-        , label [ Attr.for (name ++ String.fromInt 1) ] [ text (name ++ String.fromInt 1) ]
-        , input
-            [ Attr.type_ "radio"
-            , Attr.name name
-            , Attr.value "0"
-            , Events.onInput event
-            , Attr.checked (val == 0)
-            , Attr.id (name ++ String.fromInt 0)
-            ]
-            []
-        , label [ Attr.for (name ++ String.fromInt 0) ] [ text (name ++ String.fromInt 0) ]
         ]
+
+
+viewLabel : Int -> String -> Html msg
+viewLabel index name =
+    label [ Attr.for (name ++ String.fromInt index) ] [ text (name ++ String.fromInt index) ]
+
+
+viewStar : Int -> String -> Int -> (String -> msg) -> Html msg
+viewStar index name val event =
+    input
+        [ Attr.type_ "radio"
+        , Attr.name name
+        , Attr.value <| String.fromInt index
+        , Events.onInput event
+        , Attr.checked (val == index)
+        , Attr.id (name ++ String.fromInt index)
+        ]
+        []
 
 
 renderToast : String -> Html Msg
