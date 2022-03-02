@@ -7,6 +7,7 @@ import Html exposing (Html, button, div, h1, h2, h3, input, label, text)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Http
+import Json.Encode as Encode
 import Json.Decode as Decode
     exposing
         ( Decoder
@@ -65,7 +66,7 @@ init _ =
       , toasties = Toasty.initialState
       }
     , Cmd.batch
-        [ Date.today |> Task.perform ReceiveDate
+        [ Date.today |> Task.perform ReceiveDay
         , fetchData "955d5e0e-98a0-48d1-9ec4-18ce15026705"
         ]
     )
@@ -75,9 +76,16 @@ fetchData : String -> Cmd Msg
 fetchData id =
     Http.get
         { url = url id
-        , expect = Http.expectJson ReceiveDatas dayDecoder
+        , expect = Http.expectJson DayReceived dayDecoder
         }
 
+postData : String -> Day -> Cmd Msg
+postData id day =
+    Http.post
+        { url = url id
+        , body = Http.jsonBody (newDayEncoder day)
+        , expect = Http.expectJson DayCreated dayDecoder
+        }
 
 url : String -> String
 url id =
@@ -92,12 +100,12 @@ type Msg
     | UpdateFamily String
     | UpdateSocial String
     | UpdateWork String
-    | ReceiveDate Date
-    | ReceiveDatas (Result Http.Error Day)
+    | ReceiveDay Date
+    | DayReceived (Result Http.Error Day)
+    | DayCreated (Result Http.Error Day)
     | ToastyMsg (Toasty.Msg String)
     | Submit
-
-
+    
 dayDecoder : Decoder Day
 dayDecoder =
     Decode.succeed Day
@@ -110,6 +118,18 @@ dayDecoder =
         |> required "social" int
         |> required "work" int
 
+newDayEncoder : Day -> Encode.Value
+newDayEncoder day =
+    Encode.object
+        [ ( "day", Encode.string day.day )
+        , ( "sleep", Encode.int day.sleep )
+        , ( "energy", Encode.int day.energy )
+        , ( "intellect", Encode.int day.intellect )
+        , ( "anxiety", Encode.int day.anxiety )
+        , ( "family", Encode.int day.family )
+        , ( "social", Encode.int day.social )
+        , ( "work", Encode.int day.work )
+        ]
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -163,7 +183,7 @@ update msg model =
             in
             ( { model | day = { dayToUpdate | work = getValOrDefault value } }, Cmd.none )
 
-        ReceiveDate today ->
+        ReceiveDay today ->
             let
                 dayToUpdate =
                     model.day
@@ -172,18 +192,36 @@ update msg model =
 
         Submit ->
             ( model
-            , Cmd.none
+            , postData "955d5e0e-98a0-48d1-9ec4-18ce15026705" model.day
             )
-                |> Toasty.addToast toastyConfig ToastyMsg "successfully saved day"
 
-        ReceiveDatas (Ok day) ->
+        DayReceived (Ok day) ->
             ( { model
                 | day = day
               }
             , Cmd.none
             )
 
-        ReceiveDatas (Err httpError) ->
+        DayReceived (Err httpError) ->
+            let
+                _ =
+                    Debug.log "error " httpError
+            in
+            ( model
+            , Cmd.none
+            )
+                |> Toasty.addToast toastyConfig ToastyMsg (buildErrorMessage httpError)
+
+        DayCreated (Ok day) ->
+            ( { model
+                | day = day
+              }
+            , Cmd.none
+            )
+                |> Toasty.addToast toastyConfig ToastyMsg "successfully saved day"
+
+
+        DayCreated (Err httpError) ->
             let
                 _ =
                     Debug.log "error " httpError
