@@ -21,16 +21,26 @@ func Listen(opts ...Option) error {
 			return err
 		}
 	}
-
-	service := newService(newRepository())
+	db, err := getDB(cfg.DB.Name)
+	if err != nil {
+		log.Error().Err(err).Msg("could not connect to database")
+		return err
+	}
+	service := newService(newRepository(db))
 
 	router := gin.Default()
 	router.LoadHTMLGlob("web/public/*.html")
 	router.Static("/web/build", "./web/build")
 
 	router.GET("/", indexHandler())
-	router.GET("/day", getDayHandler(service))
-	router.POST("/day", postDayHandler(service))
+	member := router.Group("member")
+	{
+		id := member.Group(":id")
+		{
+			id.GET("/day", getDayHandler(service))
+			id.POST("/day", postDayHandler(service))
+		}
+	}
 
 	return serve(router)
 }

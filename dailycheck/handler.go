@@ -42,15 +42,16 @@ func postDayHandler(service *service) gin.HandlerFunc {
 			return
 		}
 
-		if err := service.add(*request); err != nil {
+		request.Day = time.Now().Format("2006-01-02")
+
+		res, err := service.add(*request)
+		if err != nil {
 			log.Error().Err(err).Caller().Interface("day", request).Msg("failed to add day datas")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add day datas"})
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "ok",
-		})
+		c.JSON(http.StatusCreated, res)
 	}
 }
 

@@ -21,7 +21,9 @@ func main() {
 }
 
 func run() error {
-	return dailycheck.Listen()
+	return dailycheck.Listen(
+		dailycheck.WithDB(env("DB_NAME", "dailycheck.db")),
+	)
 }
 
 func env(name, fallback string) string {

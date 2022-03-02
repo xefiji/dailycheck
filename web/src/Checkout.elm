@@ -66,22 +66,22 @@ init _ =
       }
     , Cmd.batch
         [ Date.today |> Task.perform ReceiveDate
-        , fetchData
+        , fetchData "955d5e0e-98a0-48d1-9ec4-18ce15026705"
         ]
     )
 
 
-fetchData : Cmd Msg
-fetchData =
+fetchData : String -> Cmd Msg
+fetchData id =
     Http.get
-        { url = url
+        { url = url id
         , expect = Http.expectJson ReceiveDatas dayDecoder
         }
 
 
-url : String
-url =
-    "http://localhost:8080/day"
+url : String -> String
+url id =
+    "http://localhost:8080/member/" ++ id ++ "/day"
 
 
 type Msg
