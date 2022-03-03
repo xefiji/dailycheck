@@ -34,9 +34,15 @@ func newDay() dayDatas {
 
 func getDayHandler(service *service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		day, err := service.get()
+		memberID := c.Param("memberID")
+		if memberID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing memberID"})
+			return
+		}
+
+		day, err := service.get(memberID)
 		if err != nil {
-			log.Error().Err(err).Caller().Interface("day", day).Msg("failed to get day datas")
+			log.Error().Str("memberID", memberID).Err(err).Caller().Interface("day", day).Msg("failed to get day datas")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get day datas"})
 			return
 		}
@@ -53,11 +59,16 @@ func postDayHandler(service *service) gin.HandlerFunc {
 			return
 		}
 
-		request.Day = time.Now().Format("2006-01-02")
+		memberID := c.Param("memberID")
+		if memberID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing memberID"})
+			return
+		}
 
-		res, err := service.add(*request)
+		request.Day = time.Now().Format("2006-01-02")
+		res, err := service.add(memberID, *request)
 		if err != nil {
-			log.Error().Err(err).Caller().Interface("day", request).Msg("failed to add day datas")
+			log.Error().Err(err).Caller().Str("memberID", memberID).Interface("day", request).Msg("failed to add day datas")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add day datas"})
 			return
 		}

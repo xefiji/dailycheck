@@ -17,8 +17,8 @@ func newRepository(c cnx) *repository {
 	}
 }
 
-func (r *repository) save(day dayDatas) (dayDatas, error) {
-	if err := r.db.bucket("MyBucket"); err != nil {
+func (r *repository) save(memberID string, day dayDatas) (dayDatas, error) {
+	if err := r.db.bucket(memberID); err != nil {
 		return dayDatas{}, err
 	}
 
@@ -28,9 +28,9 @@ func (r *repository) save(day dayDatas) (dayDatas, error) {
 	}
 
 	err = r.db.connector.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("MyBucket"))
+		b := tx.Bucket([]byte(memberID))
 		if b == nil {
-			return fmt.Errorf("could not retrieve bucket %s", "MyBucket")
+			return fmt.Errorf("could not retrieve bucket %s", memberID)
 		}
 
 		err := b.Put([]byte(day.Day), j)
@@ -40,17 +40,17 @@ func (r *repository) save(day dayDatas) (dayDatas, error) {
 	return day, err
 }
 
-func (r *repository) get() (dayDatas, error) {
-	if err := r.db.bucket("MyBucket"); err != nil {
+func (r *repository) get(memberID string) (dayDatas, error) {
+	if err := r.db.bucket(memberID); err != nil {
 		return dayDatas{}, err
 	}
 
 	var result = newDay()
 
 	err := r.db.connector.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("MyBucket"))
+		b := tx.Bucket([]byte(memberID))
 		if b == nil {
-			return fmt.Errorf("could not retrieve bucket %s", "MyBucket")
+			return fmt.Errorf("could not retrieve bucket %s", memberID)
 		}
 
 		if elt := b.Get([]byte(result.Day)); elt != nil {

@@ -35,10 +35,10 @@ func Listen(opts ...Option) error {
 	router.GET("/", indexHandler())
 	member := router.Group("member")
 	{
-		id := member.Group(":id")
+		memberID := member.Group(":memberID")
 		{
-			id.GET("/day", getDayHandler(service))
-			id.POST("/day", postDayHandler(service))
+			memberID.GET("/day", getDayHandler(service))
+			memberID.POST("/day", postDayHandler(service))
 		}
 	}
 
