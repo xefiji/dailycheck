@@ -30,7 +30,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@@v3
+        uses: docker/metadata-action@v3
         with:
           images: xefiji/dailycheck
 
@@ -39,10 +39,10 @@ jobs:
         with:
           go-version: '1.17.0'
 
-      # - name: Setup Elm
-      #   uses: justgook/setup-elm@1.2.0
-      #   with:
-      #     elm-version: 0.19.1
+      - name: Setup Elm
+        uses: justgook/setup-elm@1.2.0
+        with:
+          elm-version: 0.19.1
 
       - run: make build-linux
       
