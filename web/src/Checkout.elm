@@ -7,7 +7,6 @@ import Html exposing (Html, button, div, h1, h2, h3, input, label, text)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Http
-import Json.Encode as Encode
 import Json.Decode as Decode
     exposing
         ( Decoder
@@ -15,6 +14,7 @@ import Json.Decode as Decode
         , string
         )
 import Json.Decode.Pipeline exposing (required)
+import Json.Encode as Encode
 import Task
 import Time exposing (Month(..))
 import Toasty
@@ -53,13 +53,13 @@ init _ =
     let
         day =
             { day = Date.fromCalendarDate 2019 Jan 1 |> Date.toIsoString
-            , sleep = 0
-            , energy = 0
-            , intellect = 0
-            , anxiety = 0
-            , family = 0
-            , social = 0
-            , work = 0
+            , sleep = -1
+            , energy = -1
+            , intellect = -1
+            , anxiety = -1
+            , family = -1
+            , social = -1
+            , work = -1
             }
     in
     ( { day = day
@@ -79,6 +79,7 @@ fetchData id =
         , expect = Http.expectJson DayReceived dayDecoder
         }
 
+
 postData : String -> Day -> Cmd Msg
 postData id day =
     Http.post
@@ -86,6 +87,7 @@ postData id day =
         , body = Http.jsonBody (newDayEncoder day)
         , expect = Http.expectJson DayCreated dayDecoder
         }
+
 
 url : String -> String
 url id =
@@ -100,12 +102,14 @@ type Msg
     | UpdateFamily String
     | UpdateSocial String
     | UpdateWork String
+    | ResetRow String
     | ReceiveDay Date
     | DayReceived (Result Http.Error Day)
     | DayCreated (Result Http.Error Day)
     | ToastyMsg (Toasty.Msg String)
     | Submit
-    
+
+
 dayDecoder : Decoder Day
 dayDecoder =
     Decode.succeed Day
@@ -117,6 +121,7 @@ dayDecoder =
         |> required "family" int
         |> required "social" int
         |> required "work" int
+
 
 newDayEncoder : Day -> Encode.Value
 newDayEncoder day =
@@ -131,57 +136,61 @@ newDayEncoder day =
         , ( "work", Encode.int day.work )
         ]
 
+
+updateDayAttribute : Day -> String -> Int -> Day
+updateDayAttribute day attribute value =
+    case attribute of
+        "sleep" ->
+            { day | sleep = value }
+
+        "energy" ->
+            { day | energy = value }
+
+        "intellect" ->
+            { day | intellect = value }
+
+        "anxiety" ->
+            { day | anxiety = value }
+
+        "family" ->
+            { day | family = value }
+
+        "social" ->
+            { day | social = value }
+
+        "work" ->
+            { day | work = value }
+
+        _ ->
+            day
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ResetRow attribute ->
+            ( { model | day = updateDayAttribute model.day attribute -1 }, Cmd.none )
+
         UpdateSleep value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | sleep = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "sleep" (getValOrDefault value) }, Cmd.none )
 
         UpdateEnergy value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | energy = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "energy" (getValOrDefault value) }, Cmd.none )
 
         UpdateIntellect value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | intellect = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "intellect" (getValOrDefault value) }, Cmd.none )
 
         UpdateAnxiety value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | anxiety = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "anxiety" (getValOrDefault value) }, Cmd.none )
 
         UpdateFamily value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | family = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "family" (getValOrDefault value) }, Cmd.none )
 
         UpdateSocial value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | social = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "social" (getValOrDefault value) }, Cmd.none )
 
         UpdateWork value ->
-            let
-                dayToUpdate =
-                    model.day
-            in
-            ( { model | day = { dayToUpdate | work = getValOrDefault value } }, Cmd.none )
+            ( { model | day = updateDayAttribute model.day "work" (getValOrDefault value) }, Cmd.none )
 
         ReceiveDay today ->
             let
@@ -219,7 +228,6 @@ update msg model =
             , Cmd.none
             )
                 |> Toasty.addToast toastyConfig ToastyMsg "successfully saved day"
-
 
         DayCreated (Err httpError) ->
             let
@@ -295,7 +303,7 @@ view model =
         ]
 
 
-viewStars : String -> Int -> (String -> msg) -> Html msg
+viewStars : String -> Int -> (String -> Msg) -> Html Msg
 viewStars name val event =
     div [ Attr.class "row" ]
         [ div [ Attr.class "col-md-6" ]
@@ -316,18 +324,22 @@ viewStars name val event =
         ]
 
 
-viewLabel : Int -> String -> Html msg
+viewLabel : Int -> String -> Html Msg
 viewLabel index name =
     label [ Attr.for (name ++ String.fromInt index) ] [ text (name ++ String.fromInt index) ]
 
 
-viewStar : Int -> String -> Int -> (String -> msg) -> Html msg
+viewStar : Int -> String -> Int -> (String -> Msg) -> Html Msg
 viewStar index name val event =
     input
         [ Attr.type_ "radio"
         , Attr.name name
         , Attr.value <| String.fromInt index
-        , Events.onInput event
+        , if index == 1 && val == 1 then
+            Events.onClick (ResetRow name)
+
+          else
+            Events.onInput event
         , Attr.checked (val == index)
         , Attr.id (name ++ String.fromInt index)
         ]

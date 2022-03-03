@@ -10,8 +10,8 @@ func newService(repo *repository) *service {
 	}
 }
 
-func (s *service) get(day string) (dayDatas, error) {
-	return s.repo.get(day)
+func (s *service) get() (dayDatas, error) {
+	return s.repo.get()
 }
 
 func (s *service) add(day dayDatas) (dayDatas, error) {

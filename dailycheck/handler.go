@@ -19,13 +19,24 @@ type dayDatas struct {
 	Work      int    `json:"work"`
 }
 
+func newDay() dayDatas {
+	return dayDatas{
+		Day:       time.Now().Format("2006-01-02"),
+		Sleep:     -1,
+		Energy:    -1,
+		Intellect: -1,
+		Anxiety:   -1,
+		Family:    -1,
+		Social:    -1,
+		Work:      -1,
+	}
+}
+
 func getDayHandler(service *service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		today := time.Now().Format("2006-01-02")
-
-		day, err := service.get(today)
+		day, err := service.get()
 		if err != nil {
-			log.Error().Err(err).Caller().Str("day", today).Msg("failed to get day datas")
+			log.Error().Err(err).Caller().Interface("day", day).Msg("failed to get day datas")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get day datas"})
 			return
 		}

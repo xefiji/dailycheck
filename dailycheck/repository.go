@@ -40,12 +40,12 @@ func (r *repository) save(day dayDatas) (dayDatas, error) {
 	return day, err
 }
 
-func (r *repository) get(day string) (dayDatas, error) {
+func (r *repository) get() (dayDatas, error) {
 	if err := r.db.bucket("MyBucket"); err != nil {
 		return dayDatas{}, err
 	}
 
-	var result = dayDatas{}
+	var result = newDay()
 
 	err := r.db.connector.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("MyBucket"))
@@ -53,8 +53,11 @@ func (r *repository) get(day string) (dayDatas, error) {
 			return fmt.Errorf("could not retrieve bucket %s", "MyBucket")
 		}
 
-		res := b.Get([]byte(day))
-		return json.Unmarshal(res, &result)
+		if elt := b.Get([]byte(result.Day)); elt != nil {
+			return json.Unmarshal(elt, &result)
+		}
+
+		return nil
 	})
 
 	return result, err
