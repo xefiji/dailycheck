@@ -3,6 +3,8 @@ build: elm-build
 
 build-linux: elm-build
 	GOOS=linux go build -o deployment/dist/dailycheck cmd/server.go
+	@cp -R web/build deployment/dist/
+	@cp -R web/public deployment/dist/
 
 run: build
 	deployment/dist/dailycheck
