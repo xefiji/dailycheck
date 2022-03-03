@@ -10,7 +10,7 @@ run: build
 	deployment/dist/dailycheck
 
 elm-build:
-	elm make web/src/Checkout.elm  --output web/build/dailycheck.js
+	elm make web/src/Checkout.elm  --optimize --output web/build/dailycheck.js
 
 dist: build-linux
 	@if [ -z "$$VERSION" ]; then \

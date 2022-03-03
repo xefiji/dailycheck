@@ -8,6 +8,6 @@ COPY ./dist/dailycheck /
 COPY ./dist/build /web/build
 COPY ./dist/public /web/public
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["/dailycheck"]

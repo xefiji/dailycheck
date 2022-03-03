@@ -2,7 +2,6 @@ module Checkout exposing (..)
 
 import Browser
 import Date exposing (Date)
-import Debug
 import Html exposing (Html, button, div, h1, h2, h3, input, label, text)
 import Html.Attributes as Attr
 import Html.Events as Events
@@ -91,7 +90,7 @@ postData id day =
 
 url : String -> String
 url id =
-    "http://localhost:8080/member/" ++ id ++ "/day"
+    "http://dailycheck.fxechappe.com/member/" ++ id ++ "/day"
 
 
 type Msg
@@ -212,10 +211,6 @@ update msg model =
             )
 
         DayReceived (Err httpError) ->
-            let
-                _ =
-                    Debug.log "error " httpError
-            in
             ( model
             , Cmd.none
             )
@@ -230,10 +225,6 @@ update msg model =
                 |> Toasty.addToast toastyConfig ToastyMsg "successfully saved day"
 
         DayCreated (Err httpError) ->
-            let
-                _ =
-                    Debug.log "error " httpError
-            in
             ( model
             , Cmd.none
             )

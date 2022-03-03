@@ -23,6 +23,7 @@ func main() {
 func run() error {
 	return dailycheck.Listen(
 		dailycheck.WithDB(env("DB_NAME", "dailycheck.db")),
+		dailycheck.WithPort(env("PORT", "80")),
 	)
 }
 

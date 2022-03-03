@@ -42,12 +42,12 @@ func Listen(opts ...Option) error {
 		}
 	}
 
-	return serve(router)
+	return serve(router, cfg.Port)
 }
 
-func serve(router http.Handler) error {
+func serve(router http.Handler, port string) error {
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", port),
 		Handler: router,
 	}
 
