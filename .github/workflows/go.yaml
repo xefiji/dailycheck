@@ -10,19 +10,8 @@ on:
       - v*
 env:
   CGO_ENABLED: 0
-jobs:
-  linter:
-    runs-on: ubuntu-latest
-    name: Run all linters
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: '1.17.0'
-      - run: make lint
-      
-  dist-docker-production:
+jobs: 
+  dist:
     runs-on: ubuntu-latest
     name: Build image and publishes it
     env:
