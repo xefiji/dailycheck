@@ -5,6 +5,7 @@ type Option func(*config) error
 type config struct {
 	DB   database
 	Port string
+	API  string
 }
 
 type database struct {
@@ -21,6 +22,13 @@ func WithDB(name string) Option {
 func WithPort(port string) Option {
 	return func(cfg *config) error {
 		cfg.Port = port
+		return nil
+	}
+}
+
+func WithAPI(url string) Option {
+	return func(cfg *config) error {
+		cfg.API = url
 		return nil
 	}
 }

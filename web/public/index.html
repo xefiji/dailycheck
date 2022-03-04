@@ -1,7 +1,7 @@
 <head>
     <link rel="stylesheet" 
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>{{ .title }}</title>
+    <title>{{ .title }} {{ .apiUrl }}</title>
 </head>
 
   <style>
@@ -52,8 +52,9 @@
     <script src="web/build/dailycheck.js"></script>
     <script>
       var app = Elm.Checkout.init({
-        node: document.getElementById("elm-app")
-      });      
+        node: document.getElementById("elm-app"),
+        flags: { url: `{{.apiUrl}}`} //dirty trick to avoid having to handle env var in helm
+      });         
     </script>
   </body>
 </html>

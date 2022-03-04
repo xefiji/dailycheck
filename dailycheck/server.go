@@ -32,7 +32,7 @@ func Listen(opts ...Option) error {
 	router.LoadHTMLGlob("web/public/*.html")
 	router.Static("/web/build", "./web/build")
 
-	router.GET("/", indexHandler())
+	router.GET("/", indexHandler(cfg.API))
 	member := router.Group("member")
 	{
 		memberID := member.Group(":memberID")

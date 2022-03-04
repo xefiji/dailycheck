@@ -14,19 +14,18 @@ import Json.Decode as Decode
         )
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
+import String exposing (replace)
 import Task
 import Time exposing (Month(..))
 import Toasty
 
 
-main : Program () Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = \_ -> Sub.none
-        }
+type alias Flags =
+    { url : String }
+
+
+type alias Config =
+    { url : String }
 
 
 type alias Day =
@@ -43,14 +42,28 @@ type alias Day =
 
 type alias Model =
     { day : Day
+    , config : Config
     , toasties : Toasty.Stack String
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+main : Program Flags Model Msg
+main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     let
-        day =
+        config =
+            { url = replace "\\" "" flags.url |> replace "\"" "" }
+    in
+    ( { day =
             { day = Date.fromCalendarDate 2019 Jan 1 |> Date.toIsoString
             , sleep = -1
             , energy = -1
@@ -60,37 +73,31 @@ init _ =
             , social = -1
             , work = -1
             }
-    in
-    ( { day = day
+      , config = config
       , toasties = Toasty.initialState
       }
     , Cmd.batch
         [ Date.today |> Task.perform ReceiveDay
-        , fetchData "955d5e0e-98a0-48d1-9ec4-18ce15026705"
+        , fetchData config "955d5e0e-98a0-48d1-9ec4-18ce15026705"
         ]
     )
 
 
-fetchData : String -> Cmd Msg
-fetchData id =
+fetchData : Config -> String -> Cmd Msg
+fetchData config id =
     Http.get
-        { url = url id
+        { url = config.url ++ id ++ "/day"
         , expect = Http.expectJson DayReceived dayDecoder
         }
 
 
-postData : String -> Day -> Cmd Msg
-postData id day =
+postData : Config -> String -> Day -> Cmd Msg
+postData config id day =
     Http.post
-        { url = url id
+        { url = config.url ++ id ++ "/day"
         , body = Http.jsonBody (newDayEncoder day)
         , expect = Http.expectJson DayCreated dayDecoder
         }
-
-
-url : String -> String
-url id =
-    "http://dailycheck.fxechappe.com/member/" ++ id ++ "/day"
 
 
 type Msg
@@ -200,7 +207,7 @@ update msg model =
 
         Submit ->
             ( model
-            , postData "955d5e0e-98a0-48d1-9ec4-18ce15026705" model.day
+            , postData model.config "955d5e0e-98a0-48d1-9ec4-18ce15026705" model.day
             )
 
         DayReceived (Ok day) ->

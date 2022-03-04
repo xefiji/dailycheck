@@ -77,10 +77,11 @@ func postDayHandler(service *service) gin.HandlerFunc {
 	}
 }
 
-func indexHandler() gin.HandlerFunc {
+func indexHandler(apiUrl string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "Daily Check",
+			"title":  "Daily Check",
+			"apiUrl": apiUrl,
 		})
 	}
 }
