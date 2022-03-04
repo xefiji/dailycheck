@@ -22,13 +22,13 @@ type dayDatas struct {
 func newDay() dayDatas {
 	return dayDatas{
 		Day:       time.Now().Format("2006-01-02"),
-		Sleep:     -1,
-		Energy:    -1,
-		Intellect: -1,
-		Anxiety:   -1,
-		Family:    -1,
-		Social:    -1,
-		Work:      -1,
+		Sleep:     0,
+		Energy:    0,
+		Intellect: 0,
+		Anxiety:   0,
+		Family:    0,
+		Social:    0,
+		Work:      0,
 	}
 }
 
