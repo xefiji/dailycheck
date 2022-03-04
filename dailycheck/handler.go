@@ -13,7 +13,7 @@ type dayDatas struct {
 	Sleep     int    `json:"sleep"`
 	Energy    int    `json:"energy"`
 	Intellect int    `json:"intellect"`
-	Anxiety   int    `json:"anxiety"`
+	Serenity  int    `json:"serenity"`
 	Family    int    `json:"family"`
 	Social    int    `json:"social"`
 	Work      int    `json:"work"`
@@ -25,7 +25,7 @@ func newDay() dayDatas {
 		Sleep:     0,
 		Energy:    0,
 		Intellect: 0,
-		Anxiety:   0,
+		Serenity:  0,
 		Family:    0,
 		Social:    0,
 		Work:      0,

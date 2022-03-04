@@ -6,3 +6,4 @@ deployment/dist/*
 !deployment/dist/.gitkeep
 *.db
 .env
+.DS_Store

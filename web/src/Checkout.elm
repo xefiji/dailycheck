@@ -36,7 +36,7 @@ type alias Day =
     , sleep : Int
     , energy : Int
     , intellect : Int
-    , anxiety : Int
+    , serenity : Int
     , family : Int
     , social : Int
     , work : Int
@@ -71,7 +71,7 @@ init flags =
             , sleep = 0
             , energy = 0
             , intellect = 0
-            , anxiety = 0
+            , serenity = 0
             , family = 0
             , social = 0
             , work = 0
@@ -107,7 +107,7 @@ type Msg
     = UpdateSleep String
     | UpdateEnergy String
     | UpdateIntellect String
-    | UpdateAnxiety String
+    | UpdateSerenity String
     | UpdateFamily String
     | UpdateSocial String
     | UpdateWork String
@@ -126,7 +126,7 @@ dayDecoder =
         |> required "sleep" int
         |> required "energy" int
         |> required "intellect" int
-        |> required "anxiety" int
+        |> required "serenity" int
         |> required "family" int
         |> required "social" int
         |> required "work" int
@@ -139,7 +139,7 @@ newDayEncoder day =
         , ( "sleep", Encode.int day.sleep )
         , ( "energy", Encode.int day.energy )
         , ( "intellect", Encode.int day.intellect )
-        , ( "anxiety", Encode.int day.anxiety )
+        , ( "serenity", Encode.int day.serenity )
         , ( "family", Encode.int day.family )
         , ( "social", Encode.int day.social )
         , ( "work", Encode.int day.work )
@@ -158,8 +158,8 @@ updateDayAttribute day attribute value =
         "intellect" ->
             { day | intellect = value }
 
-        "anxiety" ->
-            { day | anxiety = value }
+        "serenity" ->
+            { day | serenity = value }
 
         "family" ->
             { day | family = value }
@@ -189,8 +189,8 @@ update msg model =
         UpdateIntellect value ->
             ( { model | day = updateDayAttribute model.day "intellect" (getValOrDefault value) }, Cmd.none )
 
-        UpdateAnxiety value ->
-            ( { model | day = updateDayAttribute model.day "anxiety" (getValOrDefault value) }, Cmd.none )
+        UpdateSerenity value ->
+            ( { model | day = updateDayAttribute model.day "serenity" (getValOrDefault value) }, Cmd.none )
 
         UpdateFamily value ->
             ( { model | day = updateDayAttribute model.day "family" (getValOrDefault value) }, Cmd.none )
@@ -286,7 +286,7 @@ view model =
             , renderRatingRow "sleep" model.day.sleep UpdateSleep
             , renderRatingRow "energy" model.day.energy UpdateEnergy
             , renderRatingRow "intellect" model.day.intellect UpdateIntellect
-            , renderRatingRow "anxiety" model.day.anxiety UpdateAnxiety
+            , renderRatingRow "serenity" model.day.serenity UpdateSerenity
             , renderRatingRow "family" model.day.family UpdateFamily
             , renderRatingRow "social" model.day.social UpdateSocial
             , renderRatingRow "work" model.day.work UpdateWork
