@@ -304,52 +304,6 @@ view model =
         ]
 
 
-
--- div [ Attr.class "container" ]
---     [ div [ Attr.class "rate" ]
---         [ h1 [] [ text "Daily Check" ]
---         , h2 [] [ text model.day.day ]
---         , Toasty.view toastyConfig renderToast ToastyMsg model.toasties
---         , viewStars "sleep" model.day.sleep UpdateSleep
---         , viewStars "energy" model.day.energy UpdateEnergy
---         , viewStars "intellect" model.day.intellect UpdateIntellect
---         , viewStars "anxiety" model.day.anxiety UpdateAnxiety
---         , viewStars "family" model.day.family UpdateFamily
---         , viewStars "social" model.day.social UpdateSocial
---         , viewStars "work" model.day.work UpdateWork
---         ]
---     , div [ Attr.class "submit", Attr.class "row" ]
---         [ div [ Attr.class "col-md-6" ]
---             [ button
---                 [ Events.onClick Submit
---                 , Attr.class "btn"
---                 , Attr.class "btn-success"
---                 ]
---                 [ text "All set!" ]
---             ]
---         ]
---     ]
--- viewStars : String -> Int -> (String -> Msg) -> Html Msg
--- viewStars name val event =
---     div [ Attr.class "row" ]
---         [ div [ Attr.class "col-md-6" ]
---             [ h3 [] [ Html.text name ]
---             , div [ Attr.class "stars" ]
---                 [ viewStar 5 name val event
---                 , viewLabel 5 name
---                 , viewStar 4 name val event
---                 , viewLabel 4 name
---                 , viewStar 3 name val event
---                 , viewLabel 3 name
---                 , viewStar 2 name val event
---                 , viewLabel 2 name
---                 , viewStar 1 name val event
---                 , viewLabel 1 name
---                 ]
---             ]
---         ]
-
-
 viewStar : Int -> String -> Int -> (String -> Msg) -> Html Msg
 viewStar index name val event =
     input

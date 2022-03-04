@@ -2,12 +2,14 @@ FROM golang:latest as builder
 
 FROM scratch
 
+WORKDIR /app
+
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY ./dist/dailycheck /
-COPY ./dist/build /web/build
-COPY ./dist/public /web/public
+COPY ./dist/dailycheck /app
+COPY ./dist/build /app/web/build
+COPY ./dist/public /app/web/public
 
 EXPOSE 80
 
-CMD ["/dailycheck"]
+CMD ["/app/dailycheck"]
