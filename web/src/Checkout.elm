@@ -21,6 +21,7 @@ import Svg.Attributes exposing (..)
 import Task
 import Time exposing (Month(..))
 import Toasty
+import Toasty.Defaults
 
 
 type alias Flags =
@@ -280,9 +281,10 @@ view : Model -> Html Msg
 view model =
     div [ Attr.class "container" ]
         [ div [ Attr.class "rate" ]
-            [ h1 [] [ Html.text "Daily Check" ]
-            , h2 [] [ Html.text model.day.day ]
-            , Toasty.view toastyConfig renderToast ToastyMsg model.toasties
+            [ h3 [] [ Html.text model.day.day ]
+            , div [ Attr.class "toast-container" ]
+                [ Toasty.view toastyConfig renderToast ToastyMsg model.toasties
+                ]
             , renderRatingRow "sleep" model.day.sleep UpdateSleep
             , renderRatingRow "energy" model.day.energy UpdateEnergy
             , renderRatingRow "intellect" model.day.intellect UpdateIntellect
@@ -323,7 +325,7 @@ viewStar index name val event =
 
 renderToast : String -> Html Msg
 renderToast toast =
-    div [] [ Html.text toast ]
+    div [ Attr.class "alert", Attr.class "alert-primary" ] [ Html.text toast ]
 
 
 renderRatingRow : String -> Int -> (String -> Msg) -> Html Msg
