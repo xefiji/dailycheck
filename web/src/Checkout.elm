@@ -2,17 +2,15 @@ module Checkout exposing (..)
 
 import Browser
 import Date exposing (Date)
-import Html exposing (Html, button, div, h2, input, label, nav)
+import Debug
+import Html exposing (Html, button, div, h2, input, label)
 import Html.Attributes as Attr
 import Html.Events as Events
 import Http
-import Json.Decode as Decode
-    exposing
-        ( Decoder
-        , int
-        )
+import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
+import Result
 import String exposing (replace)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -72,7 +70,7 @@ init flags =
             }
     in
     ( { day =
-            { day = Date.fromCalendarDate 2019 Jan 1 |> Date.toIsoString
+            { day = defaultDate |> Date.toIsoString
             , dayReadable = ""
             , sleep = 0
             , energy = 0
@@ -89,6 +87,11 @@ init flags =
         [ Date.today |> Task.perform ReceiveDay
         ]
     )
+
+
+defaultDate : Date
+defaultDate =
+    Date.fromCalendarDate 2022 Jan 1
 
 
 fetchData : Config -> String -> String -> Cmd Msg
@@ -118,6 +121,8 @@ type Msg
     | UpdateWork String
     | ResetRow String
     | ReceiveDay Date
+    | FetchPreviousDay
+    | FetchNextDay
     | DayReceived (Result Http.Error Day)
     | DayCreated (Result Http.Error Day)
     | ToastyMsg (Toasty.Msg String)
@@ -219,6 +224,16 @@ update msg model =
             , fetchData model.config "955d5e0e-98a0-48d1-9ec4-18ce15026705" formattedDay
             )
 
+        FetchPreviousDay ->
+            ( model
+            , fetchData model.config "955d5e0e-98a0-48d1-9ec4-18ce15026705" (addDays -1 model.day.day)
+            )
+
+        FetchNextDay ->
+            ( model
+            , fetchData model.config "955d5e0e-98a0-48d1-9ec4-18ce15026705" (addDays 1 model.day.day)
+            )
+
         Submit ->
             ( model
             , postData model.config "955d5e0e-98a0-48d1-9ec4-18ce15026705" model.day
@@ -304,6 +319,20 @@ view model =
             [ div [ Attr.class "container-fluid" ]
                 [ Html.a [ Attr.class "navbar-brand" ]
                     [ Html.text (model.config.title ++ " " ++ model.day.dayReadable)
+                    , Html.span [ Attr.id "prevNext" ]
+                        [ Html.a
+                            [ Attr.class "link-dark"
+                            , Events.onClick FetchPreviousDay
+                            ]
+                            [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-left-circle" ] []
+                            ]
+                        , Html.a
+                            [ Attr.class "link-dark"
+                            , Events.onClick FetchNextDay
+                            ]
+                            [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-right-circle" ] []
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -331,8 +360,6 @@ view model =
                     ]
                 ]
             ]
-        -- , div [ Attr.class "arrow-left" ] [ Html.text "left" ]
-        -- , div [ Attr.class "arrow-right" ] [ Html.text "right" ]
         ]
 
 
