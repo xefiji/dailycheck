@@ -82,7 +82,6 @@ func postDayHandler(service *service) gin.HandlerFunc {
 			return
 		}
 
-		request.Day = time.Now().Format("2006-01-02")
 		res, err := service.add(memberID, *request)
 		if err != nil {
 			log.Error().Err(err).Caller().Str("memberID", memberID).Interface("day", request).Msg("failed to add day datas")
