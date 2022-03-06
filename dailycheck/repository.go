@@ -3,6 +3,7 @@ package dailycheck
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	bolt "go.etcd.io/bbolt"
 )
@@ -40,12 +41,12 @@ func (r *repository) save(memberID string, day dayDatas) (dayDatas, error) {
 	return day, err
 }
 
-func (r *repository) get(memberID string) (dayDatas, error) {
+func (r *repository) get(memberID string, day time.Time) (dayDatas, error) {
 	if err := r.db.bucket(memberID); err != nil {
 		return dayDatas{}, err
 	}
 
-	var result = newDay()
+	var result = newDay(day)
 
 	err := r.db.connector.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(memberID))
@@ -53,10 +54,13 @@ func (r *repository) get(memberID string) (dayDatas, error) {
 			return fmt.Errorf("could not retrieve bucket %s", memberID)
 		}
 
-		if elt := b.Get([]byte(result.Day)); elt != nil {
-			return json.Unmarshal(elt, &result)
-		}
+		c := b.Cursor()
 
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			if string(k) == day.Format(dayFormatYMD) {
+				return json.Unmarshal(v, &result)
+			}
+		}
 		return nil
 	})
 

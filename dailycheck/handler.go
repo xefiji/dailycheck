@@ -20,11 +20,19 @@ type dayDatas struct {
 	Work        int    `json:"work"`
 }
 
-func newDay() dayDatas {
-	today := time.Now()
+func (d *dayDatas) setReadable() {
+	dt, err := time.Parse(dayFormatYMD, d.Day)
+	if err != nil {
+		log.Error().Err(err).Msg("failed setting day readable")
+	} else {
+		d.DayReadable = dt.Format(dayFormatReadable)
+	}
+}
+
+func newDay(day time.Time) dayDatas {
 	return dayDatas{
-		Day:         today.Format(dayFormatYMD),
-		DayReadable: today.Format(dayFormatReadable),
+		Day:         day.Format(dayFormatYMD),
+		DayReadable: day.Format(dayFormatReadable),
 		Sleep:       0,
 		Energy:      0,
 		Intellect:   0,
@@ -39,18 +47,24 @@ func getDayHandler(service *service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		memberID := c.Param("memberID")
 		if memberID == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "missing memberID"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid or missing memberID param"})
 			return
 		}
 
-		day, err := service.get(memberID)
+		day, err := time.Parse(dayFormatYMD, c.Param("day"))
 		if err != nil {
-			log.Error().Str("memberID", memberID).Err(err).Caller().Interface("day", day).Msg("failed to get day datas")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid or missing day param"})
+			return
+		}
+
+		dayDatas, err := service.get(memberID, day)
+		if err != nil {
+			log.Error().Str("memberID", memberID).Err(err).Caller().Interface("day", dayDatas).Msg("failed to get day datas")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get day datas"})
 			return
 		}
 
-		c.JSON(http.StatusOK, day)
+		c.JSON(http.StatusOK, dayDatas)
 	}
 }
 

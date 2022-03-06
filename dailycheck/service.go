@@ -17,21 +17,21 @@ func newService(repo *repository) *service {
 	}
 }
 
-func (s *service) get(memberID string) (dayDatas, error) {
-	d, err := s.repo.get(memberID)
+func (s *service) get(memberID string, day time.Time) (dayDatas, error) {
+	d, err := s.repo.get(memberID, day)
 	if err != nil {
 		return d, err
 	}
 
-	date, err := time.Parse(dayFormatYMD, d.Day)
-	if err != nil {
-		return d, err
-	}
-
-	d.DayReadable = date.Format(dayFormatReadable)
+	d.setReadable()
 	return d, nil
 }
 
 func (s *service) add(memberID string, day dayDatas) (dayDatas, error) {
-	return s.repo.save(memberID, day)
+	d, err := s.repo.save(memberID, day)
+	if err != nil {
+		return d, err
+	}
+	d.setReadable()
+	return d, nil
 }

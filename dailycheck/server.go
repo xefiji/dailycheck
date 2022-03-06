@@ -37,7 +37,7 @@ func Listen(opts ...Option) error {
 	{
 		memberID := member.Group(":memberID")
 		{
-			memberID.GET("/day", getDayHandler(service))
+			memberID.GET("/day/:day", getDayHandler(service))
 			memberID.POST("/day", postDayHandler(service))
 		}
 	}
