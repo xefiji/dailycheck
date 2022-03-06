@@ -13,8 +13,8 @@ type cnx struct {
 	connector rw
 }
 
-func getDB(name string) (cnx, error) {
-	b, err := bolt.Open(name, 0600, nil)
+func getDB(path string) (cnx, error) {
+	b, err := bolt.Open(path, 0600, nil)
 	if err != nil {
 		return cnx{}, err
 	}

@@ -9,26 +9,29 @@ import (
 )
 
 type dayDatas struct {
-	Day       string `json:"day"`
-	Sleep     int    `json:"sleep"`
-	Energy    int    `json:"energy"`
-	Intellect int    `json:"intellect"`
-	Serenity  int    `json:"serenity"`
-	Family    int    `json:"family"`
-	Social    int    `json:"social"`
-	Work      int    `json:"work"`
+	Day         string `json:"day"`
+	DayReadable string `json:"day_readable"`
+	Sleep       int    `json:"sleep"`
+	Energy      int    `json:"energy"`
+	Intellect   int    `json:"intellect"`
+	Serenity    int    `json:"serenity"`
+	Family      int    `json:"family"`
+	Social      int    `json:"social"`
+	Work        int    `json:"work"`
 }
 
 func newDay() dayDatas {
+	today := time.Now()
 	return dayDatas{
-		Day:       time.Now().Format("2006-01-02"),
-		Sleep:     0,
-		Energy:    0,
-		Intellect: 0,
-		Serenity:  0,
-		Family:    0,
-		Social:    0,
-		Work:      0,
+		Day:         today.Format(dayFormatYMD),
+		DayReadable: today.Format(dayFormatReadable),
+		Sleep:       0,
+		Energy:      0,
+		Intellect:   0,
+		Serenity:    0,
+		Family:      0,
+		Social:      0,
+		Work:        0,
 	}
 }
 
@@ -81,6 +84,7 @@ func indexHandler(apiUrl string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":  "Daily Check",
+			"date":   time.Now().Format(dayFormatReadable),
 			"apiUrl": apiUrl,
 		})
 	}

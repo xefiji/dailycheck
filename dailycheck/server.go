@@ -21,7 +21,7 @@ func Listen(opts ...Option) error {
 			return err
 		}
 	}
-	db, err := getDB(cfg.DB.Name)
+	db, err := getDB(cfg.DB.Path)
 	if err != nil {
 		log.Error().Err(err).Msg("could not connect to database")
 		return err

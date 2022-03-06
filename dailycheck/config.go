@@ -9,12 +9,12 @@ type config struct {
 }
 
 type database struct {
-	Name string
+	Path string
 }
 
-func WithDB(name string) Option {
+func WithDB(path string) Option {
 	return func(cfg *config) error {
-		cfg.DB.Name = name
+		cfg.DB.Path = path
 		return nil
 	}
 }

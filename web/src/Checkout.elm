@@ -281,8 +281,7 @@ view : Model -> Html Msg
 view model =
     div [ Attr.class "container" ]
         [ div [ Attr.class "rate" ]
-            [ h3 [] [ Html.text model.day.day ]
-            , div [ Attr.class "toast-container" ]
+            [ div [ Attr.class "toast-container" ]
                 [ Toasty.view toastyConfig renderToast ToastyMsg model.toasties
                 ]
             , renderRatingRow "sleep" model.day.sleep UpdateSleep
