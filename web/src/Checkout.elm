@@ -255,6 +255,16 @@ update msg model =
             Toasty.update toastyConfig ToastyMsg subMsg model
 
 
+addDays : Int -> String -> String
+addDays days ymd =
+    let
+        date =
+            Date.fromIsoString ymd |> Result.withDefault defaultDate
+    in
+    Date.add Date.Days days date
+        |> Date.toIsoString
+
+
 toastyConfig : Toasty.Config msg
 toastyConfig =
     Toasty.config
