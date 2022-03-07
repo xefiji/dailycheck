@@ -349,14 +349,14 @@ view model =
                 , renderRatingRow "social" model.day.social UpdateSocial
                 , renderRatingRow "work" model.day.work UpdateWork
                 ]
-            , div [ Attr.class "submit", Attr.class "row" ]
-                [ div [ Attr.class "col-md-6" ]
-                    [ button
-                        [ Events.onClick Submit
-                        , Attr.class "btn"
-                        , Attr.class "btn-success"
-                        ]
-                        [ Html.text "All set!" ]
+            , div [ Attr.class "submit" ]
+                [ button
+                    [ Events.onClick Submit
+                    , Attr.class "btn"
+                    , Attr.class "btn-success"
+                    ]
+                    [ Html.i [ Attr.class "bi", Attr.class "bi-check" ] []
+                    , Html.text "All set!"
                     ]
                 ]
             ]
