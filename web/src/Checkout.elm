@@ -315,28 +315,28 @@ buildErrorMessage httpError =
 view : Model -> Html Msg
 view model =
     div []
-        [ div [ Attr.class "navbar", Attr.class "navbar-light", Attr.class "bg-light" ]
+        [ div [ Attr.class "navbar", Attr.class "navbar-light", Attr.class "fixed-top", Attr.class "bg-light" ]
             [ div [ Attr.class "container-fluid" ]
                 [ Html.a [ Attr.class "navbar-brand" ]
                     [ Html.text (model.config.title ++ " " ++ model.day.dayReadable)
-                    , Html.span [ Attr.id "prevNext" ]
-                        [ Html.a
-                            [ Attr.class "link-dark"
-                            , Events.onClick FetchPreviousDay
-                            ]
-                            [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-left-circle" ] []
-                            ]
-                        , Html.a
-                            [ Attr.class "link-dark"
-                            , Events.onClick FetchNextDay
-                            ]
-                            [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-right-circle" ] []
-                            ]
+                    ]
+                , Html.div [ Attr.id "prevNext" ]
+                    [ Html.a
+                        [ Attr.class "link-dark"
+                        , Events.onClick FetchPreviousDay
+                        ]
+                        [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-left-circle" ] []
+                        ]
+                    , Html.a
+                        [ Attr.class "link-dark"
+                        , Events.onClick FetchNextDay
+                        ]
+                        [ Html.i [ Attr.class "bi", Attr.class "bi-arrow-right-circle" ] []
                         ]
                     ]
                 ]
             ]
-        , div [ Attr.class "container" ]
+        , div [ Attr.class "container", Attr.id "container-main" ]
             [ div [ Attr.class "rate" ]
                 [ div [ Attr.class "toast-container" ]
                     [ Toasty.view toastyConfig renderToast ToastyMsg model.toasties

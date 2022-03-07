@@ -31,6 +31,7 @@ func Listen(opts ...Option) error {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/public/*.html")
 	router.Static("/web/build", "./web/build")
+	router.StaticFile("/web/public/images/favicon.ico", "./web/public/images/favicon.ico")
 
 	router.GET("/", indexHandler(cfg.API))
 	member := router.Group("member")

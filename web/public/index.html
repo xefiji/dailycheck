@@ -2,6 +2,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="icon" type="image/x-icon" href="web/public/images/favicon.ico">
     <title>{{ .title }}</title>
 </head>
 
@@ -14,11 +15,15 @@
     }
 
     #prevNext{
-      margin: 0 0 0 20px;
+      position: relative;
     }
 
     #prevNext > a{
       margin-right: 10px;
+    }
+
+    #container-main{
+      margin-top: 60px;
     }
 
     .toast-container{
@@ -156,12 +161,37 @@
       align-items: center;
       box-shadow: 0 4px 30px rgba(0,0,0,.05);
     }
+
+    #footer{
+      text-align: center;
+      font-size: 0.7em;
+    }
+
+    #footer > ul{
+      list-style-type: none;
+    }
+
+    .copyleft {
+      display:inline-block;
+      transform: rotate(180deg);
+    }
+    
 </style>
 
   <body>
       <div id="elm-app"></div>
     
     <script src="web/build/dailycheck.js"></script>
+
+    <hr />
+    <div id="footer">
+      <ul>
+        <li><a href="https://github.com/xefiji" title="author"><span class="copyleft">&copy;</span>xefiji</a></li>
+        <li><a href="https://www.flaticon.com/free-icons/mood" title="mood icon">Mood icon by Freepik - Flaticon</a></li>
+        <li><a href="https://codepen.io/knyttneve/pen/EBNqPN" title="star rating">Star rating css and animation</a> by <a href="https://codepen.io/knyttneve" title="Mert Cukuren">Mert Cukuren</a></li>
+      </ul>
+      
+    </div>
     <script>
       var app = Elm.Checkout.init({
         node: document.getElementById("elm-app"),
