@@ -14,5 +14,6 @@ WORKDIR /app/db
 WORKDIR /app
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["/app/dailycheck"]
